@@ -1,0 +1,31 @@
+version: '3.9'
+
+services:
+  mysql:
+    image: mysql
+    container_name: mysql-db
+    restart: always
+    environment:
+      - MYSQL_USER=myuser
+      - MYSQL_DATABASE=sms
+      - MYSQL_PASSWORD=passcode
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin-ui
+    restart: always
+    environment:
+      - PMA_HOST=mysql
+      - PMA_PORT=3306
+    depends_on:
+      - mysql
+    ports:
+      - "8080:80"
+
+volumes:
+  mysql_data:
