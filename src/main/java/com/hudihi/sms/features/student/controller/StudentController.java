@@ -17,8 +17,11 @@ import com.hudihi.sms.features.student.dto.StudentResponse;
 import com.hudihi.sms.features.student.service.StudentService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @RestController
 @RequestMapping (ApiConstants.API_BASE_PATH + "students")
@@ -60,12 +63,16 @@ public class StudentController {
     @Operation (summary = ApiConstants.GET_STUDENT_BY_ID_DESCRIPTION)
     @ApiResponses (
         value = {
-            @ApiResponse (responseCode = ApiConstants.SUCCESS_200, description = ApiConstants.GET_STUDENT_BY_ID_DESCRIPTION),
+            @ApiResponse (responseCode = ApiConstants.SUCCESS_200, description = ApiConstants.GET_STUDENT_BY_ID_DESCRIPTION,
+                content = {@Content (mediaType = "application/json",
+                    schema = @Schema(implementation = StudentResponse.class)
+                )}
+            ),
             @ApiResponse (responseCode = ApiConstants.NOT_FOUND_404, description = ApiConstants.NOT_FOUND_DESCRIPTION)
         }
     )
     @GetMapping("/{studentId}")
-    public ResponseEntity<StudentResponse> getStudent(@PathVariable Long studentId){
+    public ResponseEntity<StudentResponse> getStudent(@Parameter(description = ApiConstants.SEARCH_ID_DESCRIPTION) @PathVariable Long studentId){
         StudentResponse response = studentService.getStudentById(studentId);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -79,7 +86,7 @@ public class StudentController {
         }
     )
     @PostMapping ("/{studentId}/enroll/{courseId}")
-    public ResponseEntity<Void> enrollStudentInCourse(@PathVariable Long studentId, @PathVariable Long courseId){
+    public ResponseEntity<Void> enrollStudentInCourse(@Parameter(description = ApiConstants.SEARCH_ID_DESCRIPTION) @PathVariable Long studentId, @Parameter(description = ApiConstants.SEARCH_ID_DESCRIPTION) @PathVariable Long courseId){
         studentService.enrollStudentInCourse(studentId, courseId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -93,7 +100,7 @@ public class StudentController {
         }
     )
     @DeleteMapping ("/{studentId}/remove/{courseId}")
-    public ResponseEntity<Void> removeStudentFromCourse(@PathVariable Long studentId, @PathVariable Long courseId){
+    public ResponseEntity<Void> removeStudentFromCourse(@Parameter(description = ApiConstants.SEARCH_ID_DESCRIPTION) @PathVariable Long studentId, @Parameter(description = ApiConstants.SEARCH_ID_DESCRIPTION) @PathVariable Long courseId){
         studentService.removeStudentFromCourse(studentId, courseId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
@@ -107,7 +114,7 @@ public class StudentController {
         }
     )
     @PutMapping ("/{studentId}/updateCourse/{courseId}")
-    public ResponseEntity<Void> updateStudentCourses(@PathVariable Long studentId, @PathVariable Long courseId){
+    public ResponseEntity<Void> updateStudentCourses(@Parameter(description = ApiConstants.SEARCH_ID_DESCRIPTION) @PathVariable Long studentId, @Parameter(description = ApiConstants.SEARCH_ID_DESCRIPTION) @PathVariable Long courseId){
         studentService.updateStudentCourses(studentId, courseId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -120,7 +127,7 @@ public class StudentController {
         }
     )
     @DeleteMapping ("/{studentId}/delete")
-    public ResponseEntity<Void> deleteStudent(@PathVariable Long studentId){
+    public ResponseEntity<Void> deleteStudent(@Parameter (description = ApiConstants.SEARCH_ID_DESCRIPTION) @PathVariable Long studentId){
         studentService.deleteStudent(studentId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
