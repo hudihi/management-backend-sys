@@ -19,6 +19,9 @@ import com.hudihi.sms.features.course.dto.CourseResponse;
 import com.hudihi.sms.features.course.service.CourseService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
@@ -36,7 +39,12 @@ public class CourseController {
     @Operation (summary = ApiConstants.GET_ALL_COURSES_DESCRIPTION)
     @ApiResponses (
         value = {
-            @ApiResponse (responseCode = ApiConstants.SUCCESS_200, description = ApiConstants.GET_ALL_COURSES_DESCRIPTION),
+            @ApiResponse (responseCode = ApiConstants.SUCCESS_200, description = ApiConstants.GET_ALL_COURSES_DESCRIPTION,
+                content ={ @Content (mediaType = "application/json",
+                    schema = @Schema (implementation = CourseResponse.class)
+                ),
+                }
+            ),
             @ApiResponse (responseCode = ApiConstants.NOT_FOUND_404, description = ApiConstants.NOT_FOUND_DESCRIPTION)
         }
     )
@@ -49,12 +57,16 @@ public class CourseController {
     @Operation (summary = ApiConstants.GET_COURSE_BY_ID_DESCRIPTION)
     @ApiResponses (
         value = {
-            @ApiResponse( responseCode = ApiConstants.SUCCESS_200, description = ApiConstants.GET_COURSE_BY_ID_DESCRIPTION),
+            @ApiResponse( responseCode = ApiConstants.SUCCESS_200, description = ApiConstants.GET_COURSE_BY_ID_DESCRIPTION,
+                content = { @Content (mediaType = "application/json",
+                    schema = @Schema(implementation = CourseResponse.class)
+                )}
+            ),
             @ApiResponse( responseCode = ApiConstants.NOT_FOUND_404, description = ApiConstants.NOT_FOUND_DESCRIPTION)
         }
     )
     @GetMapping ("/{courseId}")
-    public ResponseEntity<CourseResponse> getCourseById(@PathVariable Long courseId){
+    public ResponseEntity<CourseResponse> getCourseById(@Parameter(description = ApiConstants.SEARCH_ID_DESCRIPTION) @PathVariable Long courseId){
         CourseResponse course = courseService.getCourseById(courseId);
         return ResponseEntity.status(HttpStatus.OK).body(course);
     }
