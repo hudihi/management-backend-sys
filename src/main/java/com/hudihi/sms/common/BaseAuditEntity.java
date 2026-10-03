@@ -20,10 +20,10 @@ public class BaseAuditEntity {
     
     @CreatedDate
     @Column (name = "created_at", nullable = false)
-    private Instant createdAt;
+    private Instant createdAt = Instant.now();
 
 
     @LastModifiedDate
     @Column(name = "updated_at", nullable = false, updatable = false)
-    private Instant updatedAt;
+    private Instant updatedAt = Instant.now();
 }
